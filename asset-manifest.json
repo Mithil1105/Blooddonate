@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/Blooddonate/static/css/main.d8d7b6ac.css",
+    "main.js": "/Blooddonate/static/js/main.d515b976.js",
+    "static/js/453.9692abaf.chunk.js": "/Blooddonate/static/js/453.9692abaf.chunk.js",
+    "index.html": "/Blooddonate/index.html",
+    "main.d8d7b6ac.css.map": "/Blooddonate/static/css/main.d8d7b6ac.css.map",
+    "main.d515b976.js.map": "/Blooddonate/static/js/main.d515b976.js.map",
+    "453.9692abaf.chunk.js.map": "/Blooddonate/static/js/453.9692abaf.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.d8d7b6ac.css",
+    "static/js/main.d515b976.js"
+  ]
+}
