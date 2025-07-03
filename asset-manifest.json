@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "/Blooddonate/static/css/main.97be5242.css",
-    "main.js": "/Blooddonate/static/js/main.79ee8a3b.js",
+    "main.css": "/Blooddonate/static/css/main.06e03e46.css",
+    "main.js": "/Blooddonate/static/js/main.3894a07d.js",
     "static/js/453.9692abaf.chunk.js": "/Blooddonate/static/js/453.9692abaf.chunk.js",
     "index.html": "/Blooddonate/index.html",
-    "main.97be5242.css.map": "/Blooddonate/static/css/main.97be5242.css.map",
-    "main.79ee8a3b.js.map": "/Blooddonate/static/js/main.79ee8a3b.js.map",
+    "main.06e03e46.css.map": "/Blooddonate/static/css/main.06e03e46.css.map",
+    "main.3894a07d.js.map": "/Blooddonate/static/js/main.3894a07d.js.map",
     "453.9692abaf.chunk.js.map": "/Blooddonate/static/js/453.9692abaf.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.97be5242.css",
-    "static/js/main.79ee8a3b.js"
+    "static/css/main.06e03e46.css",
+    "static/js/main.3894a07d.js"
   ]
 }
