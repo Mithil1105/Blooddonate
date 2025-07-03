@@ -1,29 +1,28 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Routes, Route, Link } from 'react-router-dom';
 import './App.css';
 
-const CITY_LIST = [
-  'Delhi', 'Mumbai', 'Bangalore', 'Hyderabad', 'Chennai', 'Kolkata', 'Pune', 'Ahmedabad', 'Jaipur', 'Lucknow'
-];
-
-const SAMPLE_REQUESTS = {
-  Delhi: [
-    { name: 'Jane Smith', blood: 'B+', contact: 'jane@email.com', request: 'Urgent for surgery' },
-    { name: 'Amit Verma', blood: 'O-', contact: 'amit@email.com', request: 'Child patient' }
-  ],
+/** Cities and sample requests for the Donate Now form */
+const cityRequests = {
   Mumbai: [
-    { name: 'Rahul Kumar', blood: 'O-', contact: 'rahul@email.com', request: 'Accident case' }
+    { id: 1, patient: 'Amit Shah', bloodGroup: 'A+', hospital: 'City Hospital', urgency: 'High' },
+    { id: 2, patient: 'Priya Mehta', bloodGroup: 'O-', hospital: 'Red Cross', urgency: 'Medium' },
+  ],
+  Delhi: [
+    { id: 3, patient: 'Rahul Verma', bloodGroup: 'B+', hospital: 'Apollo', urgency: 'High' },
+    { id: 4, patient: 'Fatima Ali', bloodGroup: 'AB+', hospital: 'Max Healthcare', urgency: 'Low' },
   ],
   Bangalore: [
-    { name: 'Fatima Ali', blood: 'AB+', contact: 'fatima@email.com', request: 'Cancer treatment' }
+    { id: 5, patient: 'Suresh Kumar', bloodGroup: 'O+', hospital: 'Fortis', urgency: 'Medium' },
   ],
-  Hyderabad: [],
-  Chennai: [],
-  Kolkata: [],
+  Hyderabad: [
+    { id: 6, patient: 'Anjali Rao', bloodGroup: 'A-', hospital: 'Care Hospital', urgency: 'High' },
+  ],
+  Chennai: [
+    { id: 7, patient: 'Vikram Singh', bloodGroup: 'B-', hospital: 'Apollo', urgency: 'Low' },
+  ],
   Pune: [],
-  Ahmedabad: [],
-  Jaipur: [],
-  Lucknow: []
+  Kolkata: [],
 };
 
 function Home() {
@@ -159,6 +158,11 @@ function About() {
 }
 
 function DonateNow() {
+  const [selectedCity, setSelectedCity] = React.useState('');
+  const [selectedRequest, setSelectedRequest] = React.useState('');
+  const cities = Object.keys(cityRequests);
+  const requests = selectedCity ? cityRequests[selectedCity] : [];
+
   return (
     <div className="page donate">
       <h1>Donate Now</h1>
@@ -188,7 +192,39 @@ function DonateNow() {
           </select>
         </label>
         <label>Contact:<input type="text" placeholder="Phone or Email" required /></label>
-        <label>Location:<input type="text" placeholder="City" required /></label>
+        <label>Location:
+          <select required value={selectedCity} onChange={e => { setSelectedCity(e.target.value); setSelectedRequest(''); }}>
+            <option value="">Select City</option>
+            {cities.map(city => <option key={city} value={city}>{city}</option>)}
+          </select>
+        </label>
+        {selectedCity && (
+          <div className="city-requests">
+            <h4>Available Blood Requests in {selectedCity}:</h4>
+            {requests.length === 0 ? (
+              <div className="no-requests">No urgent requests in this city. You can still donate for future needs!</div>
+            ) : (
+              <ul>
+                {requests.map(req => (
+                  <li key={req.id}>
+                    <label>
+                      <input
+                        type="radio"
+                        name="bloodRequest"
+                        value={req.id}
+                        checked={selectedRequest === String(req.id)}
+                        onChange={() => setSelectedRequest(String(req.id))}
+                      />
+                      <span className="request-info">
+                        <b>{req.patient}</b> ({req.bloodGroup}) at <b>{req.hospital}</b> - <span className={req.urgency.toLowerCase()}>{req.urgency} urgency</span>
+                      </span>
+                    </label>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+        )}
         <label>Medical Conditions:<input type="text" placeholder="e.g. Diabetes, Hypertension, None" /></label>
         <label>Last Donation Date:<input type="date" /></label>
         <label>Are you willing to donate in emergencies?
@@ -285,17 +321,6 @@ function Profile() {
 }
 
 function FindDonors() {
-  const [selectedCity, setSelectedCity] = useState('');
-  const [selectedBlood, setSelectedBlood] = useState('');
-  const [showResults, setShowResults] = useState(false);
-
-  const handleSearch = (e) => {
-    e.preventDefault();
-    setShowResults(true);
-  };
-
-  const requests = selectedCity && SAMPLE_REQUESTS[selectedCity] ? SAMPLE_REQUESTS[selectedCity].filter(r => !selectedBlood || r.blood === selectedBlood) : [];
-
   return (
     <div className="page find-donors">
       <h1>Find Donors</h1>
@@ -305,36 +330,30 @@ function FindDonors() {
         className="section-img"
       />
       <p>Looking for a blood donor? Search our database by blood group and location. For urgent needs, call our helpline: <strong>+91 12345 67890</strong></p>
-      <form className="find-form" onSubmit={handleSearch}>
+      <form className="find-form">
         <label>Blood Group:
-          <select required value={selectedBlood} onChange={e => setSelectedBlood(e.target.value)}>
+          <select required>
             <option value="">Select</option>
             <option>A+</option><option>A-</option><option>B+</option><option>B-</option>
             <option>AB+</option><option>AB-</option><option>O+</option><option>O-</option>
           </select>
         </label>
-        <label>Location:
-          <select required value={selectedCity} onChange={e => setSelectedCity(e.target.value)}>
-            <option value="">Select City</option>
-            {CITY_LIST.map(city => <option key={city} value={city}>{city}</option>)}
-          </select>
-        </label>
+        <label>Location:<input type="text" placeholder="City" required /></label>
         <button type="submit">Search</button>
       </form>
-      {showResults && (
-        <div className="donor-list">
-          <h2>Available Requests in {selectedCity} {selectedBlood && `(Blood Group: ${selectedBlood})`}</h2>
-          {requests.length > 0 ? (
-            <ul>
-              {requests.map((r, i) => (
-                <li key={i}><b>{r.name}</b> - {r.blood} - {r.request} - <a href={`mailto:${r.contact}`}>Contact</a></li>
-              ))}
-            </ul>
-          ) : (
-            <p>No requests found for this city and blood group.</p>
-          )}
-        </div>
-      )}
+      <div className="donor-list">
+        <h2>Available Donors (Sample)</h2>
+        <ul>
+          <li>Jane Smith - B+ - Delhi - <a href="mailto:jane@email.com">Contact</a></li>
+          <li>Rahul Kumar - O- - Bangalore - <a href="mailto:rahul@email.com">Contact</a></li>
+          <li>Fatima Ali - AB+ - Hyderabad - <a href="mailto:fatima@email.com">Contact</a></li>
+        </ul>
+        <img
+          src="https://images.unsplash.com/photo-1465101178521-c5249f4b7a09?auto=format&fit=crop&w=800&q=80"
+          alt="Blood donor search"
+          className="section-img"
+        />
+      </div>
       <section>
         <h2>Emergency?</h2>
         <p>If you need blood urgently, please call our 24/7 helpline: <strong>+91 12345 67890</strong></p>
@@ -402,60 +421,96 @@ function Signup() {
   );
 }
 
+// Admin page with tabs for dashboard, add request, approve admins, add donation
 function Admin() {
+  const [tab, setTab] = React.useState('dashboard');
   return (
     <div className="page admin">
-      <h1>Admin Dashboard</h1>
-      <section>
-        <h2>Add Blood Request</h2>
-        <form className="admin-form">
-          <label>Name:<input type="text" placeholder="Patient Name" /></label>
-          <label>Blood Group:
-            <select>
-              <option value="">Select</option>
-              <option>A+</option><option>A-</option><option>B+</option><option>B-</option>
-              <option>AB+</option><option>AB-</option><option>O+</option><option>O-</option>
-            </select>
-          </label>
-          <label>City:
-            <select>
-              <option value="">Select City</option>
-              {CITY_LIST.map(city => <option key={city} value={city}>{city}</option>)}
-            </select>
-          </label>
-          <label>Contact:<input type="text" placeholder="Contact Email or Phone" /></label>
-          <label>Request Details:<input type="text" placeholder="Reason/Details" /></label>
-          <button type="submit" disabled>Add Request (Demo Only)</button>
-        </form>
-      </section>
-      <section>
-        <h2>Approve Admins</h2>
-        <form className="admin-form">
-          <label>Email:<input type="email" placeholder="Admin Email" /></label>
-          <button type="submit" disabled>Approve Admin (Demo Only)</button>
-        </form>
-      </section>
-      <section>
-        <h2>Add Blood Donation</h2>
-        <form className="admin-form">
-          <label>Donor Name:<input type="text" placeholder="Donor Name" /></label>
-          <label>Blood Group:
-            <select>
-              <option value="">Select</option>
-              <option>A+</option><option>A-</option><option>B+</option><option>B-</option>
-              <option>AB+</option><option>AB-</option><option>O+</option><option>O-</option>
-            </select>
-          </label>
-          <label>City:
-            <select>
-              <option value="">Select City</option>
-              {CITY_LIST.map(city => <option key={city} value={city}>{city}</option>)}
-            </select>
-          </label>
-          <label>Date:<input type="date" /></label>
-          <button type="submit" disabled>Add Donation (Demo Only)</button>
-        </form>
-      </section>
+      <h1>Admin Panel</h1>
+      <div className="admin-tabs">
+        <button className={tab === 'dashboard' ? 'active' : ''} onClick={() => setTab('dashboard')}>Dashboard</button>
+        <button className={tab === 'addRequest' ? 'active' : ''} onClick={() => setTab('addRequest')}>Add Blood Request</button>
+        <button className={tab === 'addDonation' ? 'active' : ''} onClick={() => setTab('addDonation')}>Add Blood Donation</button>
+        <button className={tab === 'approveAdmins' ? 'active' : ''} onClick={() => setTab('approveAdmins')}>Approve Admins</button>
+      </div>
+      <div className="admin-content">
+        {tab === 'dashboard' && (
+          <div className="admin-dashboard">
+            <h2>Overview</h2>
+            <ul>
+              <li><b>Active Requests:</b> 7</li>
+              <li><b>Pending Donations:</b> 3</li>
+              <li><b>Admins:</b> 2</li>
+              <li><b>Total Donors:</b> 1200+</li>
+            </ul>
+            <p>Welcome, Admin! Use the tabs above to manage requests, donations, and admins. All changes are reflected instantly for the community.</p>
+          </div>
+        )}
+        {tab === 'addRequest' && (
+          <div className="admin-add-request">
+            <h2>Add Blood Request</h2>
+            <form className="admin-form">
+              <label>Patient Name:<input type="text" placeholder="Patient Name" required /></label>
+              <label>Blood Group:
+                <select required>
+                  <option value="">Select</option>
+                  <option>A+</option><option>A-</option><option>B+</option><option>B-</option>
+                  <option>AB+</option><option>AB-</option><option>O+</option><option>O-</option>
+                </select>
+              </label>
+              <label>Hospital:<input type="text" placeholder="Hospital Name" required /></label>
+              <label>City:
+                <select required>
+                  <option value="">Select City</option>
+                  {Object.keys(cityRequests).map(city => <option key={city} value={city}>{city}</option>)}
+                </select>
+              </label>
+              <label>Urgency:
+                <select required>
+                  <option value="">Select</option>
+                  <option>High</option>
+                  <option>Medium</option>
+                  <option>Low</option>
+                </select>
+              </label>
+              <button type="submit">Add Request</button>
+            </form>
+          </div>
+        )}
+        {tab === 'addDonation' && (
+          <div className="admin-add-donation">
+            <h2>Add Blood Donation</h2>
+            <form className="admin-form">
+              <label>Donor Name:<input type="text" placeholder="Donor Name" required /></label>
+              <label>Blood Group:
+                <select required>
+                  <option value="">Select</option>
+                  <option>A+</option><option>A-</option><option>B+</option><option>B-</option>
+                  <option>AB+</option><option>AB-</option><option>O+</option><option>O-</option>
+                </select>
+              </label>
+              <label>City:
+                <select required>
+                  <option value="">Select City</option>
+                  {Object.keys(cityRequests).map(city => <option key={city} value={city}>{city}</option>)}
+                </select>
+              </label>
+              <label>Date:<input type="date" required /></label>
+              <button type="submit">Add Donation</button>
+            </form>
+          </div>
+        )}
+        {tab === 'approveAdmins' && (
+          <div className="admin-approve-admins">
+            <h2>Approve Admins</h2>
+            <ul className="pending-admins">
+              <li>neha@email.com <button>Approve</button></li>
+              <li>amit@email.com <button>Approve</button></li>
+            </ul>
+            <p>Admins can manage requests, donations, and other admins. Only approve trusted users.</p>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
