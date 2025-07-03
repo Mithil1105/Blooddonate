@@ -142,10 +142,20 @@ function DonateNow() {
         src="https://images.unsplash.com/photo-1519494026892-80bbd2d6fd07?auto=format&fit=crop&w=800&q=80"
         alt="Donate now section"
         className="section-img"
+        style={{ display: 'block', margin: '0 auto 1.5rem auto', maxWidth: '400px', width: '100%' }}
       />
       <p>Fill out the form below to register as a blood donor. Our team will contact you for the next available donation drive or emergency need.</p>
       <form className="donate-form">
         <label>Name:<input type="text" placeholder="Your Name" required /></label>
+        <label>Age:<input type="number" min="18" max="65" placeholder="Your Age" required /></label>
+        <label>Gender:
+          <select required>
+            <option value="">Select</option>
+            <option>Male</option>
+            <option>Female</option>
+            <option>Other</option>
+          </select>
+        </label>
         <label>Blood Group:
           <select required>
             <option value="">Select</option>
@@ -155,6 +165,7 @@ function DonateNow() {
         </label>
         <label>Contact:<input type="text" placeholder="Phone or Email" required /></label>
         <label>Location:<input type="text" placeholder="City" required /></label>
+        <label>Medical Conditions:<input type="text" placeholder="e.g. Diabetes, Hypertension, None" /></label>
         <label>Last Donation Date:<input type="date" /></label>
         <label>Are you willing to donate in emergencies?
           <select required>
@@ -162,6 +173,9 @@ function DonateNow() {
             <option>Yes</option>
             <option>No</option>
           </select>
+        </label>
+        <label className="consent-label">
+          <input type="checkbox" required /> I confirm that I am in good health and willing to donate blood.
         </label>
         <button type="submit">Submit</button>
       </form>
@@ -176,6 +190,7 @@ function DonateNow() {
           src="https://images.unsplash.com/photo-1468519413686-89bfa1e8bdf8?auto=format&fit=crop&w=800&q=80"
           alt="Nurse with blood bag"
           className="section-img"
+          style={{ display: 'block', margin: '1.5rem auto', maxWidth: '400px', width: '100%' }}
         />
       </section>
       <section>
